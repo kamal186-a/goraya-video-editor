@@ -6,12 +6,15 @@ INJECTED from /workspaces/goraya-video-editor/app/src/main/AndroidManifest.xml:2
 INJECTED from /workspaces/goraya-video-editor/app/src/main/AndroidManifest.xml:2:1-17:12
 MERGED from [:video-engine] /workspaces/goraya-video-editor/video-engine/build/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.media3:media3-ui:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/54e94eba612d2856aa9fc80110aea278/transformed/media3-ui-1.4.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-effect:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/4e77e7c1ec2cdc70a2636f71c1c54d99/transformed/media3-effect-1.4.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-extractor:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/961cb918a27d275c44ecc6a9c11eec46/transformed/media3-extractor-1.4.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-muxer:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/9775fb3b40eb3edb7c1e9090f603140f/transformed/media3-muxer-1.4.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-container:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/966a4ceb6ec542f3fd5f3f815a0c9adf/transformed/media3-container-1.4.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-datasource:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/f3e9ed55a99517525082ec26b829e55d/transformed/media3-datasource-1.4.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-decoder:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/1ab8a38362c1a8b9205ffbd672d4b4e0/transformed/media3-decoder-1.4.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-database:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/e8f070d8068091938646234415bc4a88/transformed/media3-database-1.4.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-common:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/59d9b5a0562274ebd199e70a4a478cf1/transformed/media3-common-1.4.1/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.media3:media3-transformer:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/0471aee4302c1ec38a8620b2f6fdf727/transformed/media3-transformer-1.4.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-exoplayer:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/38dbf88b5c35b7ada14fc777ca5082c5/transformed/media3-exoplayer-1.4.1/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.media:media:1.7.0] /home/codespace/.gradle/caches/9.7.1/transforms/6ed242e9acac294d62b9de5ffb5326b5/transformed/media-1.7.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.recyclerview:recyclerview:1.3.0] /home/codespace/.gradle/caches/9.7.1/transforms/686a42c10af244c71a1f23d69a51016a/transformed/recyclerview-1.3.0/AndroidManifest.xml:17:1-22:12
@@ -119,8 +122,12 @@ MERGED from [:video-engine] /workspaces/goraya-video-editor/video-engine/build/i
 MERGED from [:video-engine] /workspaces/goraya-video-editor/video-engine/build/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:5:5-44
 MERGED from [androidx.media3:media3-ui:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/54e94eba612d2856aa9fc80110aea278/transformed/media3-ui-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-ui:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/54e94eba612d2856aa9fc80110aea278/transformed/media3-ui-1.4.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-effect:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/4e77e7c1ec2cdc70a2636f71c1c54d99/transformed/media3-effect-1.4.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-effect:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/4e77e7c1ec2cdc70a2636f71c1c54d99/transformed/media3-effect-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-extractor:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/961cb918a27d275c44ecc6a9c11eec46/transformed/media3-extractor-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-extractor:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/961cb918a27d275c44ecc6a9c11eec46/transformed/media3-extractor-1.4.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-muxer:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/9775fb3b40eb3edb7c1e9090f603140f/transformed/media3-muxer-1.4.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-muxer:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/9775fb3b40eb3edb7c1e9090f603140f/transformed/media3-muxer-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-container:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/966a4ceb6ec542f3fd5f3f815a0c9adf/transformed/media3-container-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-container:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/966a4ceb6ec542f3fd5f3f815a0c9adf/transformed/media3-container-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-datasource:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/f3e9ed55a99517525082ec26b829e55d/transformed/media3-datasource-1.4.1/AndroidManifest.xml:20:5-44
@@ -131,6 +138,8 @@ MERGED from [androidx.media3:media3-database:1.4.1] /home/codespace/.gradle/cach
 MERGED from [androidx.media3:media3-database:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/e8f070d8068091938646234415bc4a88/transformed/media3-database-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-common:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/59d9b5a0562274ebd199e70a4a478cf1/transformed/media3-common-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-common:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/59d9b5a0562274ebd199e70a4a478cf1/transformed/media3-common-1.4.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-transformer:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/0471aee4302c1ec38a8620b2f6fdf727/transformed/media3-transformer-1.4.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-transformer:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/0471aee4302c1ec38a8620b2f6fdf727/transformed/media3-transformer-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-exoplayer:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/38dbf88b5c35b7ada14fc777ca5082c5/transformed/media3-exoplayer-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-exoplayer:1.4.1] /home/codespace/.gradle/caches/9.7.1/transforms/38dbf88b5c35b7ada14fc777ca5082c5/transformed/media3-exoplayer-1.4.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media:media:1.7.0] /home/codespace/.gradle/caches/9.7.1/transforms/6ed242e9acac294d62b9de5ffb5326b5/transformed/media-1.7.0/AndroidManifest.xml:5:5-44

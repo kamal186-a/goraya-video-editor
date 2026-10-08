@@ -7,3 +7,5 @@
 
 Planned: AndroidX Media3 (Apache-2.0), FFmpeg (LGPL-2.1+ build only), Vosk/Whisper (Apache-2.0/MIT).
 No CapCut code, assets, fonts or music are used.
+
+Added in Phase 2: AndroidX Media3 (ExoPlayer, UI, Transformer, Effect) - Apache-2.0; kotlinx-coroutines - Apache-2.0.
