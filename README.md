@@ -8,7 +8,8 @@ Requires JDK 17, curl, unzip. The script downloads the Android SDK (Linux) and G
 
 ## Status
 - Phase 1 (done): compiling skeleton, dark UI shell, timeline model, effect registry, CI.
-- Phase 2: import, preview, timeline UI, trim/split/merge, MP4 export.
+- Phase 2a (done): photo/video import, Media3 preview with Play/Pause/seek.
+- Phase 2b: timeline UI, trim/split/merge, MP4 export.
 - Phase 3: GPU effects, filters, transitions, text (Urdu/RTL), keyframes, audio.
 - Phase 4: auto captions, chroma key, background removal, stickers, project save.
 
