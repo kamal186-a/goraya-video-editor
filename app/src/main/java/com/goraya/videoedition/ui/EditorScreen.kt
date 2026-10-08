@@ -55,12 +55,13 @@ fun EditorScreen() {
         Text("Goraya Video Edition", Modifier.padding(horizontal = 16.dp, vertical = 8.dp), style = MaterialTheme.typography.titleMedium)
         PreviewPanel(
             clip = state.selected,
+            aspect = state.canvas.aw.toFloat() / state.canvas.ah,
             onPosition = { previewPos = it },
             modifier = Modifier.weight(1f).padding(horizontal = 16.dp)
         )
         TimelineView(state)
 
-        Column(Modifier.height(150.dp).fillMaxWidth().padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
+        Column(Modifier.height(180.dp).fillMaxWidth().padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
             when (tool) {
                 "Media" -> {
                     Row(Modifier.horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.CenterVertically) {
@@ -81,9 +82,11 @@ fun EditorScreen() {
                     }
                     state.selected?.let { c -> TrimPanel(c) { s, e -> state.trim(s, e) } }
                 }
-                "Export" -> ExportPanel(exporter, state.clips.isNotEmpty()) { w, h ->
+                "Export" -> ExportPanel(exporter, state.clips.isNotEmpty(), state.canvas) { w, h ->
                     exporter.start(state.clips.toList(), w, h)
                 }
+                "Text" -> state.selected?.let { TextPanel(it, state) } ?: Text("Pehle timeline se clip chunen")
+                "Canvas" -> CanvasPanel(state)
                 "Filters" -> state.selected?.let { FiltersPanel(it, state) } ?: Text("Pehle timeline se clip chunen")
                 "Effects" -> state.selected?.let { AdjustPanel(it, state) } ?: Text("Pehle timeline se clip chunen")
                 else -> Text("$tool tool agle hisson mein aayega.")

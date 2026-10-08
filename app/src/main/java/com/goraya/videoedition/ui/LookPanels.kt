@@ -14,7 +14,7 @@ import com.goraya.videoedition.edit.EditorState
 import com.goraya.videoedition.edit.Filters
 
 @Composable
-private fun LabeledSlider(
+fun LabeledSlider(
     label: String,
     value: Float,
     range: ClosedFloatingPointRange<Float>,

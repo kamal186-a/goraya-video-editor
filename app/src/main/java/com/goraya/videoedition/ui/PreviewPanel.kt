@@ -13,7 +13,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
@@ -26,6 +28,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import com.goraya.videoedition.edit.EditClip
 import com.goraya.videoedition.edit.LookEffect
+import com.goraya.videoedition.edit.TextRenderer
 import com.goraya.videoedition.edit.lookColorMatrix
 import com.goraya.videoedition.edit.lookMatrix
 import com.goraya.videoedition.media.MediaLoader
@@ -36,9 +39,12 @@ fun formatTime(ms: Long): String {
     return "%d:%02d".format(s / 60, s % 60)
 }
 
-/** Previews the selected clip (with its trim applied). [onPosition] reports the time inside the clip. */
+/**
+ * Previews the selected clip inside a frame with the project's aspect ratio, so text layers
+ * sit exactly where they will be in the export. [onPosition] reports the time inside the clip.
+ */
 @Composable
-fun PreviewPanel(clip: EditClip?, onPosition: (Long) -> Unit, modifier: Modifier = Modifier) {
+fun PreviewPanel(clip: EditClip?, aspect: Float, onPosition: (Long) -> Unit, modifier: Modifier = Modifier) {
     val ctx = LocalContext.current
     val player = remember { ExoPlayer.Builder(ctx).build() }
     var error by remember { mutableStateOf<String?>(null) }
@@ -46,7 +52,14 @@ fun PreviewPanel(clip: EditClip?, onPosition: (Long) -> Unit, modifier: Modifier
     var pos by remember { mutableLongStateOf(0L) }
     var dragging by remember { mutableStateOf(false) }
     var dragValue by remember { mutableFloatStateOf(0f) }
+    var frame by remember { mutableStateOf(IntSize.Zero) }
     val dur = clip?.durationMs ?: 0L
+
+    val overlay = remember(clip?.texts, frame) {
+        val t = clip?.texts
+        if (t.isNullOrEmpty() || frame.width <= 0 || frame.height <= 0) null
+        else TextRenderer.render(t, frame.width, frame.height).asImageBitmap()
+    }
 
     DisposableEffect(player) {
         val l = object : Player.Listener {
@@ -84,6 +97,11 @@ fun PreviewPanel(clip: EditClip?, onPosition: (Long) -> Unit, modifier: Modifier
         }
     }
 
+    LaunchedEffect(clip?.look) {
+        val l = clip?.look
+        player.setVideoEffects(if (l == null || l.isNeutral) emptyList() else listOf(LookEffect(lookMatrix(l))))
+    }
+
     LaunchedEffect(player) {
         while (true) {
             if (!dragging) {
@@ -95,33 +113,35 @@ fun PreviewPanel(clip: EditClip?, onPosition: (Long) -> Unit, modifier: Modifier
         }
     }
 
-    LaunchedEffect(clip?.look) {
-        val l = clip?.look
-        player.setVideoEffects(if (l == null || l.isNeutral) emptyList() else listOf(LookEffect(lookMatrix(l))))
-    }
-
     Column(modifier) {
         Box(
             Modifier.weight(1f).fillMaxWidth().background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
         ) {
-            when {
-                clip == null -> Text("Media tool se video ya photo import karen")
-                clip.asset.isVideo -> AndroidView(
-                    factory = { c -> PlayerView(c).apply { useController = false; this.player = player } },
-                    modifier = Modifier.fillMaxSize()
-                )
-                else -> {
-                    val bmp by produceState<Bitmap?>(null, clip.asset) {
-                        value = MediaLoader.thumbnail(ctx, clip.asset, 1280)
-                    }
-                    bmp?.let {
-                        val look = clip.look
-                        Image(
-                            it.asImageBitmap(), null, Modifier.fillMaxSize(), contentScale = ContentScale.Fit,
-                            colorFilter = if (look.isNeutral) null
-                            else ColorFilter.colorMatrix(ColorMatrix(lookColorMatrix(lookMatrix(look))))
+            if (clip == null) {
+                Text("Media tool se video ya photo import karen")
+            } else {
+                Box(Modifier.aspectRatio(aspect).background(Color.Black).onSizeChanged { frame = it }) {
+                    if (clip.asset.isVideo) {
+                        AndroidView(
+                            factory = { c -> PlayerView(c).apply { useController = false; this.player = player } },
+                            modifier = Modifier.fillMaxSize()
                         )
+                    } else {
+                        val bmp by produceState<Bitmap?>(null, clip.asset) {
+                            value = MediaLoader.thumbnail(ctx, clip.asset, 1280)
+                        }
+                        bmp?.let {
+                            val look = clip.look
+                            Image(
+                                it.asImageBitmap(), null, Modifier.fillMaxSize(), contentScale = ContentScale.Fit,
+                                colorFilter = if (look.isNeutral) null
+                                else ColorFilter.colorMatrix(ColorMatrix(lookColorMatrix(lookMatrix(look))))
+                            )
+                        }
+                    }
+                    overlay?.let {
+                        Image(it, null, Modifier.fillMaxSize(), contentScale = ContentScale.FillBounds)
                     }
                 }
             }

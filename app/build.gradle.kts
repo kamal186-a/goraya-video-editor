@@ -10,8 +10,8 @@ android {
         applicationId = "com.goraya.videoedition"
         minSdk = 24
         targetSdk = 34
-        versionCode = 4
-        versionName = "0.3.0"
+        versionCode = 5
+        versionName = "0.4.0"
     }
     signingConfigs {
         create("release") {
@@ -49,6 +49,7 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.4.1")
     implementation("androidx.media3:media3-transformer:1.4.1")
     implementation("androidx.media3:media3-effect:1.4.1")
+    implementation("com.google.guava:guava:33.2.1-android")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 }

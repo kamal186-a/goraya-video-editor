@@ -3,6 +3,7 @@ package com.goraya.videoedition.edit
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.goraya.videoedition.media.MediaAsset
 
@@ -16,7 +17,8 @@ data class EditClip(
     val asset: MediaAsset,
     val inMs: Long,
     val outMs: Long,
-    val look: Look = Look()
+    val look: Look = Look(),
+    val texts: List<TextItem> = emptyList()
 ) {
     val durationMs: Long get() = outMs - inMs
     val maxLenMs: Long get() = if (asset.isVideo) asset.durationMs else PHOTO_MAX_MS
@@ -36,6 +38,32 @@ class EditorState {
         val c = EditClip(nextId++, asset, 0L, if (asset.isVideo) asset.durationMs else PHOTO_DEFAULT_MS)
         clips.add(c)
         if (selected == null) selectedId = c.id
+    }
+
+    var canvas by mutableStateOf(CANVAS_OPTIONS[0])
+    private var nextTextId = 1L
+
+    /** Adds a text layer to the selected clip; returns its id or -1. */
+    fun addText(): Long {
+        val i = indexOfSelected()
+        if (i < 0) return -1L
+        val t = TextItem(nextTextId++)
+        clips[i] = clips[i].copy(texts = clips[i].texts + t)
+        return t.id
+    }
+
+    fun updateText(id: Long, change: (TextItem) -> TextItem) {
+        val i = indexOfSelected()
+        if (i < 0) return
+        val c = clips[i]
+        clips[i] = c.copy(texts = c.texts.map { if (it.id == id) change(it) else it })
+    }
+
+    fun deleteText(id: Long) {
+        val i = indexOfSelected()
+        if (i < 0) return
+        val c = clips[i]
+        clips[i] = c.copy(texts = c.texts.filter { it.id != id })
     }
 
     fun select(id: Long) { selectedId = id }

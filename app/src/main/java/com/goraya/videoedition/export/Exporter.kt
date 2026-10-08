@@ -14,7 +14,11 @@ import androidx.compose.runtime.setValue
 import androidx.media3.common.Effect
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MimeTypes
+import androidx.media3.effect.BitmapOverlay
+import androidx.media3.effect.OverlayEffect
+import androidx.media3.effect.OverlaySettings
 import androidx.media3.effect.Presentation
+import androidx.media3.effect.TextureOverlay
 import androidx.media3.transformer.Composition
 import androidx.media3.transformer.EditedMediaItem
 import androidx.media3.transformer.EditedMediaItemSequence
@@ -25,7 +29,9 @@ import androidx.media3.transformer.ProgressHolder
 import androidx.media3.transformer.Transformer
 import com.goraya.videoedition.edit.EditClip
 import com.goraya.videoedition.edit.LookEffect
+import com.goraya.videoedition.edit.TextRenderer
 import com.goraya.videoedition.edit.lookMatrix
+import com.google.common.collect.ImmutableList
 import java.io.File
 
 /** Exports the timeline to MP4 (H.264 + AAC) with Media3 Transformer and saves it to Movies/GorayaVideoEdition. */
@@ -56,6 +62,12 @@ class Exporter(private val appCtx: Context) {
                 val fx = mutableListOf<Effect>()
                 if (!c.look.isNeutral) fx.add(LookEffect(lookMatrix(c.look)))
                 fx.add(Presentation.createForWidthAndHeight(width, height, Presentation.LAYOUT_SCALE_TO_FIT))
+                if (c.texts.isNotEmpty()) {
+                    // Frame-sized transparent bitmap with all text layers, drawn after scaling to the canvas.
+                    val bmp = TextRenderer.render(c.texts, width, height)
+                    val overlay = BitmapOverlay.createStaticBitmapOverlay(bmp, OverlaySettings.Builder().build())
+                    fx.add(OverlayEffect(ImmutableList.of<TextureOverlay>(overlay)))
+                }
                 val effects = Effects(emptyList(), fx)
                 if (c.asset.isVideo) {
                     val clip = MediaItem.ClippingConfiguration.Builder()

@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.goraya.videoedition.edit.CanvasOption
 import com.goraya.videoedition.export.Exporter
 
 /** Output size for a given short side and aspect ratio; both sides are made even for the encoder. */
@@ -17,27 +18,22 @@ fun exportSize(shortSide: Int, aw: Int, ah: Int): Pair<Int, Int> {
 }
 
 @Composable
-private fun Choice(label: String, selected: Boolean, onClick: () -> Unit) {
+fun Choice(label: String, selected: Boolean, onClick: () -> Unit) {
     TextButton(onClick = onClick) {
         Text(label, color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface)
     }
 }
 
 @Composable
-fun ExportPanel(exporter: Exporter, hasClips: Boolean, onStart: (Int, Int) -> Unit) {
+fun ExportPanel(exporter: Exporter, hasClips: Boolean, canvas: CanvasOption, onStart: (Int, Int) -> Unit) {
     val resolutions = listOf(480, 720, 1080)
-    val aspects = listOf("16:9" to (16 to 9), "9:16" to (9 to 16), "1:1" to (1 to 1), "4:5" to (4 to 5))
     var res by remember { mutableIntStateOf(720) }
-    var aspectIdx by remember { mutableIntStateOf(0) }
-    val (aw, ah) = aspects[aspectIdx].second
-    val (w, h) = exportSize(res, aw, ah)
+    val (w, h) = exportSize(res, canvas.aw, canvas.ah)
 
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
             resolutions.forEach { r -> Choice("${r}p", r == res) { res = r } }
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            aspects.forEachIndexed { i, a -> Choice(a.first, i == aspectIdx) { aspectIdx = i } }
+            Text("Canvas: ${canvas.label}")
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (exporter.running) {
