@@ -9,3 +9,4 @@ Planned: AndroidX Media3 (Apache-2.0), FFmpeg (LGPL-2.1+ build only), Vosk/Whisp
 No CapCut code, assets, fonts or music are used.
 
 Added in Phase 2: AndroidX Media3 (ExoPlayer, UI, Transformer, Effect) - Apache-2.0; kotlinx-coroutines - Apache-2.0.
+Also: Google Guava (Apache-2.0). Emoji stickers use the device's system emoji font (Noto Color Emoji, OFL/Apache-2.0); no fonts, music or images are bundled.

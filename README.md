@@ -12,7 +12,7 @@ Requires JDK 17, curl, unzip. The script downloads the Android SDK (Linux) and G
 - Phase 2b (done): timeline blocks, trim, split, copy, delete, reorder, MP4 export (480p-1080p, 16:9/9:16/1:1/4:5).
 - Phase 3a (done): 10 colour filters + brightness/contrast/saturation/temperature (GPU, preview + export).
 - Phase 3b (done): text layers (Urdu/RTL, fonts, colour, background, position, rotation) + Canvas aspect ratio.
-- Phase 3c+: audio, more GPU effects, filters, transitions, text (Urdu/RTL), keyframes, audio.
+- Phase 4 (done): music (volume, fades), per-clip mute, emoji stickers, project save/auto-restore. See docs/PROJECT_INFO.md and docs/FUTURE.md for what remains.
 - Phase 4: auto captions, chroma key, background removal, stickers, project save.
 
 ## Adding an effect

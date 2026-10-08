@@ -1,0 +1,11 @@
+# Remaining features and how to add them
+- Speed / slow-mo: ExoPlayer.setPlaybackSpeed for preview; Transformer speed effect + Sonic audio processor for export.
+- Reverse / freeze frame: needs frame extraction or re-encode; do via FFmpegKit (LGPL build) or MediaCodec.
+- Rotate / flip / crop / zoom: Media3 ScaleAndRotateTransformation, Crop, and matrix effects (same list as filters).
+- Keyframes: store Keyframe lists (timeline/TimelineModel.kt) and feed values to a time-based GlEffect via presentationTimeUs.
+- Transitions: custom GlShaderProgram blending two frames (needs two-input compositor) - largest task.
+- More effects (blur, grain, vignette, glitch, VHS): custom BaseGlShaderProgram with GLSL fragment shaders.
+- Auto captions: offline Vosk (Apache-2.0) or whisper.cpp (MIT) as an optional model download; render with TextRenderer.
+- Chroma key: GLSL fragment shader effect with similarity/smoothness uniforms.
+- Background removal: ML Kit / MediaPipe selfie segmentation (optional component).
+- FPS / bitrate: Transformer encoder settings and frame-drop effect.

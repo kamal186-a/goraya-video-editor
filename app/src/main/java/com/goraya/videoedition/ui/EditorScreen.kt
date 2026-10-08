@@ -1,5 +1,6 @@
 package com.goraya.videoedition.ui
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -15,12 +16,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.goraya.videoedition.edit.EditClip
 import com.goraya.videoedition.edit.EditorState
 import com.goraya.videoedition.edit.MIN_CLIP_MS
 import com.goraya.videoedition.edit.PHOTO_MAX_MS
 import com.goraya.videoedition.export.Exporter
+import com.goraya.videoedition.media.AudioLoader
 import com.goraya.videoedition.media.MediaLoader
+import com.goraya.videoedition.project.ProjectStore
 import kotlinx.coroutines.launch
 
 private val tools = listOf("Media", "Audio", "Text", "Effects", "Filters", "Stickers", "Canvas", "Speed", "Export")
@@ -37,10 +43,37 @@ fun EditorScreen() {
 
     fun toast(msg: String) = Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show()
 
+    val musicPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) scope.launch {
+            try {
+                ctx.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } catch (e: Exception) {
+            }
+            val m = AudioLoader.load(ctx, uri).getOrNull()
+            if (m != null) state.music = m else toast("Yeh audio file import nahi ho saki")
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        val msg = ProjectStore.load(ctx, state)
+        if (msg != null) toast(msg)
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val o = LifecycleEventObserver { _, e -> if (e == Lifecycle.Event.ON_STOP) ProjectStore.save(ctx, state) }
+        lifecycleOwner.lifecycle.addObserver(o)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(o) }
+    }
+
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
         scope.launch {
             var failed = 0
             for (u in uris) {
+                try {
+                    ctx.contentResolver.takePersistableUriPermission(u, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                } catch (e: Exception) {
+                }
                 val a = MediaLoader.load(ctx, u).getOrNull()
                 if (a != null) state.add(a) else failed++
             }
@@ -52,7 +85,12 @@ fun EditorScreen() {
         Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
             .statusBarsPadding().navigationBarsPadding()
     ) {
-        Text("Goraya Video Edition", Modifier.padding(horizontal = 16.dp, vertical = 8.dp), style = MaterialTheme.typography.titleMedium)
+        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text("Goraya Video Edition", Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
+            TextButton(onClick = {
+                if (ProjectStore.save(ctx, state)) toast("Project save ho gaya") else toast("Project save nahi ho saka")
+            }) { Text("Save") }
+        }
         PreviewPanel(
             clip = state.selected,
             aspect = state.canvas.aw.toFloat() / state.canvas.ah,
@@ -83,8 +121,10 @@ fun EditorScreen() {
                     state.selected?.let { c -> TrimPanel(c) { s, e -> state.trim(s, e) } }
                 }
                 "Export" -> ExportPanel(exporter, state.clips.isNotEmpty(), state.canvas) { w, h ->
-                    exporter.start(state.clips.toList(), w, h)
+                    exporter.start(state.clips.toList(), state.music, w, h)
                 }
+                "Audio" -> AudioPanel(state) { musicPicker.launch(arrayOf("audio/*")) }
+                "Stickers" -> state.selected?.let { StickerPanel(it, state) } ?: Text("Pehle timeline se clip chunen")
                 "Text" -> state.selected?.let { TextPanel(it, state) } ?: Text("Pehle timeline se clip chunen")
                 "Canvas" -> CanvasPanel(state)
                 "Filters" -> state.selected?.let { FiltersPanel(it, state) } ?: Text("Pehle timeline se clip chunen")

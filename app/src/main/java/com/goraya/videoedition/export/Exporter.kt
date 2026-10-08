@@ -29,6 +29,7 @@ import androidx.media3.transformer.ProgressHolder
 import androidx.media3.transformer.Transformer
 import com.goraya.videoedition.edit.EditClip
 import com.goraya.videoedition.edit.LookEffect
+import com.goraya.videoedition.edit.MusicTrack
 import com.goraya.videoedition.edit.TextRenderer
 import com.goraya.videoedition.edit.lookMatrix
 import com.google.common.collect.ImmutableList
@@ -47,7 +48,7 @@ class Exporter(private val appCtx: Context) {
     private var transformer: Transformer? = null
     private var poll: Runnable? = null
 
-    fun start(clips: List<EditClip>, width: Int, height: Int) {
+    fun start(clips: List<EditClip>, music: MusicTrack?, width: Int, height: Int) {
         if (running) return
         if (clips.isEmpty()) {
             message = "Pehle timeline mein koi clip daalen"
@@ -75,7 +76,7 @@ class Exporter(private val appCtx: Context) {
                         .setEndPositionMs(c.outMs)
                         .build()
                     val mi = MediaItem.Builder().setUri(c.asset.uri).setClippingConfiguration(clip).build()
-                    EditedMediaItem.Builder(mi).setEffects(effects).build()
+                    EditedMediaItem.Builder(mi).setRemoveAudio(c.muted).setEffects(effects).build()
                 } else {
                     EditedMediaItem.Builder(MediaItem.fromUri(c.asset.uri))
                         .setDurationUs(c.durationMs * 1000L)
@@ -84,7 +85,23 @@ class Exporter(private val appCtx: Context) {
                         .build()
                 }
             }
-            val composition = Composition.Builder(EditedMediaItemSequence(items)).build()
+            val sequences = mutableListOf(EditedMediaItemSequence(items))
+            if (music != null) {
+                val totalMs = clips.sumOf { it.durationMs }
+                val endMs = minOf(music.durationMs, totalMs)
+                val cut = MediaItem.ClippingConfiguration.Builder()
+                    .setStartPositionMs(0L)
+                    .setEndPositionMs(endMs)
+                    .build()
+                val mi = MediaItem.Builder().setUri(music.uri).setClippingConfiguration(cut).build()
+                val gain = GainFadeAudioProcessor(music.volume, music.fadeInMs * 1000L, music.fadeOutMs * 1000L, endMs * 1000L)
+                val audioItem = EditedMediaItem.Builder(mi)
+                    .setRemoveVideo(true)
+                    .setEffects(Effects(listOf(gain), emptyList()))
+                    .build()
+                sequences.add(EditedMediaItemSequence(listOf(audioItem)))
+            }
+            val composition = Composition.Builder(sequences).build()
             val t = Transformer.Builder(appCtx)
                 .setVideoMimeType(MimeTypes.VIDEO_H264)
                 .setAudioMimeType(MimeTypes.AUDIO_AAC)

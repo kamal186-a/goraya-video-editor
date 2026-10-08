@@ -18,7 +18,8 @@ data class EditClip(
     val inMs: Long,
     val outMs: Long,
     val look: Look = Look(),
-    val texts: List<TextItem> = emptyList()
+    val texts: List<TextItem> = emptyList(),
+    val muted: Boolean = false
 ) {
     val durationMs: Long get() = outMs - inMs
     val maxLenMs: Long get() = if (asset.isVideo) asset.durationMs else PHOTO_MAX_MS
@@ -38,6 +39,33 @@ class EditorState {
         val c = EditClip(nextId++, asset, 0L, if (asset.isVideo) asset.durationMs else PHOTO_DEFAULT_MS)
         clips.add(c)
         if (selected == null) selectedId = c.id
+    }
+
+    var music by mutableStateOf<MusicTrack?>(null)
+
+    fun toggleMute() {
+        val i = indexOfSelected()
+        if (i < 0) return
+        clips[i] = clips[i].copy(muted = !clips[i].muted)
+    }
+
+    /** Emoji sticker: a text layer holding one emoji, drawn by the same renderer. */
+    fun addSticker(emoji: String): Long {
+        val i = indexOfSelected()
+        if (i < 0) return -1L
+        val t = TextItem(nextTextId++, text = emoji, size = 0.18f, bold = false)
+        clips[i] = clips[i].copy(texts = clips[i].texts + t)
+        return t.id
+    }
+
+    fun restore(list: List<EditClip>, m: MusicTrack?, c: CanvasOption) {
+        clips.clear()
+        clips.addAll(list)
+        music = m
+        canvas = c
+        nextId = (list.maxOfOrNull { it.id } ?: 0L) + 1L
+        nextTextId = (list.flatMap { it.texts }.maxOfOrNull { it.id } ?: 0L) + 1L
+        selectedId = list.firstOrNull()?.id ?: -1L
     }
 
     var canvas by mutableStateOf(CANVAS_OPTIONS[0])
